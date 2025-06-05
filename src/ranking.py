@@ -247,23 +247,3 @@ def print_policy_ranking_report(company_name: str, limit: int = 3) -> None:
 
     except Exception as e:
         print(f'❌ Error generating policy ranking report: {e}')
-
-
-def compare_policy_thresholds(company_name: str, limit: int = 5) -> None:
-    """
-    Compare policy rankings with different similarity thresholds.
-
-    Args:
-        company_name: Name of the company to analyze
-        limit: Number of policies to show for each threshold
-    """
-    print(f"🔬 COMPARING SIMILARITY THRESHOLDS for '{company_name}'")
-    print('=' * 60)
-
-    thresholds = [0.3, 0.1, 0.05]
-
-    for i, threshold in enumerate(thresholds, 1):
-        print(f'\n{i}️⃣ SIMILARITY THRESHOLD: {threshold:.2f}')
-        print_policy_ranking_report(company_name, limit)
-        if i < len(thresholds):
-            print('\n' + '─' * 40)
