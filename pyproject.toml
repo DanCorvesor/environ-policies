@@ -11,6 +11,8 @@ dependencies = [
     "sqlalchemy>=2.0.0",
     "psycopg2-binary>=2.9.0",
     "sqlmodel>=0.0.24",
+    "sentence-transformers>=2.2.0",
+    "pycountry-convert>=0.7.2",
 ]
 
 [dependency-groups]
@@ -33,5 +35,4 @@ lint.select = [
 
 [tool.ruff.format]
 quote-style = "single"
-indent-style = "tab"
 docstring-code-format = true
