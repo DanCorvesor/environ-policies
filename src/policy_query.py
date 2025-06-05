@@ -26,7 +26,7 @@ class PolicyQueryService:
 		with average update time for same geography over past year.
 		"""
 		# Date calculations
-		sixty_days_ago = datetime.now() - timedelta(days=90)
+		ninety_days_ago = datetime.now() - timedelta(days=90)
 		one_year_ago = datetime.now() - timedelta(days=365)
 
 		with Session(self.engine) as session:
@@ -65,8 +65,8 @@ class PolicyQueryService:
 						Policy.geography == customer_jurisdiction,
 						# Only active policies
 						Policy.status == 'active',
-						# Updated in last 60 days
-						Policy.updated_datetime >= sixty_days_ago,
+						# Updated in last 90 days
+						Policy.updated_datetime >= ninety_days_ago,
 						Policy.updated_datetime.is_not(None),
 					)
 				)

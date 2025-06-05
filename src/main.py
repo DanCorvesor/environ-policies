@@ -1,5 +1,6 @@
 from .data_processor import DataProcessor
 from .policy_query import PolicyQueryService
+from .ranking import get_top_relevant_companies, print_ranking_report
 
 
 def main():
@@ -98,6 +99,37 @@ def main():
 
 	except Exception as e:
 		print(f'⚠️ Error testing policy queries: {e}')
+
+	# Demonstrate company ranking functionality
+	print('\n' + '=' * 80)
+	print('\n🏆 COMPANY RANKING DEMONSTRATION')
+	print('-' * 50)
+
+	try:
+		# Test ranking with a sample company name
+		# You can change this to any company name that exists in your data
+		test_company = 'Microsoft'  # Change this to a company that exists in your data
+
+		print(f'🔍 Finding top 3 companies most relevant to "{test_company}"...')
+
+		# Get and display the ranking report
+		print_ranking_report(test_company, limit=3)
+
+		# Also demonstrate the programmatic API
+		print('\n📊 PROGRAMMATIC API EXAMPLE')
+		print('-' * 30)
+		relevant_companies = get_top_relevant_companies(test_company, limit=3)
+
+		if relevant_companies:
+			print(f'Found {len(relevant_companies)} relevant companies:')
+			for company in relevant_companies:
+				print(f'  • {company["company_name"]} (Score: {company["relevance_score"]:.1f})')
+		else:
+			print(f'No relevant companies found for "{test_company}"')
+			print('Try with a different company name that exists in your database.')
+
+	except Exception as e:
+		print(f'⚠️ Error testing company ranking: {e}')
 
 
 if __name__ == '__main__':
