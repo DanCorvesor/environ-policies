@@ -1,0 +1,16 @@
+FROM postgres:16-alpine
+
+# Set environment variables for PostgreSQL
+ENV POSTGRES_DB=environ_policies
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=postgres123
+ENV POSTGRES_HOST_AUTH_METHOD=md5
+
+# Create the database schema
+COPY --chown=postgres:postgres init.sql /docker-entrypoint-initdb.d/
+
+# Expose the default PostgreSQL port
+EXPOSE 5432
+
+# The default command is already set by the base image
+# CMD ["postgres"]
