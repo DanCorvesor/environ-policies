@@ -24,17 +24,6 @@ Using Docker Compose (recommended):
 docker-compose up -d postgres
 ```
 
-Or using Docker directly:
-```bash
-docker build -f Dockerfile.postgres -t environ-policies-db .
-docker run -d --name environ_policies_db \
-  -e POSTGRES_DB=environ_policies \
-  -e POSTGRES_USER=postgres \
-  -e POSTGRES_PASSWORD=postgres123 \
-  -p 5432:5432 \
-  environ-policies-db
-```
-
 ### 3. Configure Environment Variables
 Create a `.env` file in the project root with these contents:
 ```env
@@ -60,14 +49,6 @@ DB_MAX_OVERFLOW=10
 python src/main.py
 ```
 
-## Docker Database Setup
-
-The project includes Docker configuration for PostgreSQL:
-
-- **Dockerfile.postgres**: Sets up PostgreSQL 16 with Alpine Linux
-- **docker-compose.yml**: Complete orchestration with health checks and persistence
-- **init.sql**: Initializes database schema and tables automatically
-
 ### Database Schema
 The PostgreSQL container automatically creates these tables:
 
@@ -89,81 +70,18 @@ The PostgreSQL container automatically creates these tables:
 - `sectors` (TEXT[]) - PostgreSQL array for efficient list storage
 - `status` (VARCHAR(50))
 - `updated_date` (TIMESTAMP WITH TIME ZONE)
-
-**Performance Features:**
-- GIN indexes on array columns for fast array searches
-- Standard B-tree indexes on commonly queried fields
-- Optimized for both individual lookups and array operations
-
-### Array Operations
-With PostgreSQL arrays, you can perform efficient queries like:
-```sql
--- Find policies with specific topics
-SELECT * FROM policies WHERE 'Mitigation' = ANY(topics);
-
--- Find policies with multiple topics
-SELECT * FROM policies WHERE topics @> ARRAY['Mitigation', 'Adaptation'];
-
--- Find policies by array length
-SELECT * FROM policies WHERE array_length(topics, 1) > 2;
-```
-
-### Docker Commands
-
-```bash
-# Start the database
-docker-compose up -d postgres
-
-# View logs
-docker-compose logs postgres
-
-# Stop the database
-docker-compose down
-
-# Remove all data (destructive)
-docker-compose down -v
 ```
 
 ## Usage
 
-### Processing Individual Files
-```python
-from src.data_processor import DataProcessor
-
-# Process companies data
-companies_processor = DataProcessor("src/data/companies.csv")
-companies_data = companies_processor.read_csv()
-cleaned_data = companies_processor.clean_data()
-validation_results = companies_processor.validate_and_create_models()
-
-# Save to file
-companies_processor.save_cleaned_data("cleaned_companies.csv")
-
-# Load to SQL database (requires database configuration)
-companies_processor.load_to_sql(if_exists='replace')
-```
-
-### Processing Multiple Files
-```python
-# For multiple files, create separate processor instances
-files = ["companies.csv", "policies.csv"]
-processors = []
-
-for file_path in files:
-    processor = DataProcessor(file_path)
-    processor.read_csv()
-    processor.clean_data()
-    processor.validate_and_create_models()
-    processor.load_to_sql()
-    processors.append(processor)
-```
+`main.py` gives an example usage of the files
 
 ## Data Models
 
 The application validates data against Pydantic models:
 
 - **Company**: id, name, operating_jurisdiction, last_login, sector
-- **Policy**: id, name, published_date, description, geography, source_url, topics, sectors, status, updated_date
+- **Policy**: id, name, published_date, description, geography, source_url, topics, sectors, status, updated_datetime
 
 ## Project Structure
 
